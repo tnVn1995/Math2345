@@ -1,0 +1,14 @@
+#ignore files here
+.ropeproject
+db
+defaults
+plugins
+spyder.lock
+history.py
+history_internal.py
+template.py
+langconfig
+onlinehelp
+spyder
+spyder.ini.bak
+workingdir
