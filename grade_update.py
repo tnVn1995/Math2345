@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Spyder Editor
 
@@ -36,7 +35,7 @@ else:
 
 print(f"Starting to process file {args['filename']} ...")
 def update_grades(file_name, lastname=None, firstname=None,
-					R_no=None,quiz=None, grade=None):
+                  R_no=None,quiz=None, grade=None):
     """This function takes as input the student's first, last name,
     or their R# and their corresponding grade. The function will update
     the student's grade in the filename
@@ -53,10 +52,10 @@ def update_grades(file_name, lastname=None, firstname=None,
         Update the student's grade in filename
     """
     student_grade = pd.read_excel(file_name)
-	if quiz in student_grade.columns:
-		pass
-	else:
-		student_grade[quiz] = ''
+    if quiz in student_grade.columns:
+        pass
+    else:
+        student_grade[quiz] = ''
     try:
         if lastname and firstname:
             cond1 = student_grade['Last Name'] == lastname
@@ -73,7 +72,7 @@ def update_grades(file_name, lastname=None, firstname=None,
     return student_grade
 
 if __name__ == "__main__":
-    file_path = 'C:\\Users\\ngu09790\\Desktop\\updated.xlsx'
+    file_path = r'C:\Users\tnguy\Desktop\MATH2345\Math2345\grade.xlsx'
 
     if args['lastname'] and args['firstname']:
         update = update_grades(args['filename'],
@@ -84,19 +83,18 @@ if __name__ == "__main__":
         cond1 = update['Last Name'] == args['lastname']
         cond2 = update['First Name'] == args['firstname']
         print('The updated score is ..')
-        print(update.loc[(cond1)&(cond2), args['quiz#']])
+        print(update.loc[(cond1)&(cond2),['Last Name', 'First Name',args['quiz#']]])
         update.to_excel(file_path, index=None, header=True)
         data=pd.read_excel(file_path)
-        data[args['quiz#']].dropna(inplace=True)
-        print(data)
-    else:
+        print(data.dropna(subset=[args['quiz#']]))
+        # print(data)
+    elif args['R#']:
         update = update_grades(args['filename'],
                                R_no=args['R#'],
                                quiz=args['quiz#'],
                                 grade = args['grade'])
-        print('the updated score is ..')
-        print(update.loc[update['Student ID']==args['R#'], args['quiz#']])
         update.to_excel(file_path, index=None, header=True)
         data=pd.read_excel(file_path)
-        data[args['quiz#']].dropna(inplace=True)
-        print(data)
+        print(data.dropna(subset=[args['quiz#']]))
+        print('the updated score is ..')
+        print(data.loc[data['Student ID']=='R'+args['R#'], ['First Name','Last Name',args['quiz#']]])
