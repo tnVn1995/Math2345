@@ -14,17 +14,19 @@ import pandas as pd
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-l", "--lastname",
-	help="Lastname of the student")
+                help="Lastname of the student")
 ap.add_argument("-f", "--firstname",
-	help="Firstname of the student")
+                help="Firstname of the student")
 ap.add_argument("-r", "--R#",
-    help="R# of the student")
+                help="R# of the student")
 ap.add_argument('-fi', '--filename',
                 help='File to be processed')
 ap.add_argument('-g', '--grade',
                 help='grade to be updated')
-ap.add_argument('-q', '--quiz#',
-                help = 'quiz number')
+ap.add_argument('-c', '--column',
+                help = 'column to add values')
+ap.add_argument('-s', '--filesave',
+                help = 'file name to be saved')
 args = vars(ap.parse_args())
 if args['lastname'] and args['firstname']:
     print('last name and first name added')
@@ -72,29 +74,27 @@ def update_grades(file_name, lastname=None, firstname=None,
     return student_grade
 
 if __name__ == "__main__":
-    file_path = r'C:\Users\tnguy\Desktop\MATH2345\Math2345\grade.xlsx'
-
+    file_path = args['filesave']
     if args['lastname'] and args['firstname']:
         update = update_grades(args['filename'],
                                lastname=args['lastname'],
                                firstname=args['firstname'],
-                               quiz= args['quiz#'],
+                               quiz= args['column'],
                                 grade=args['grade'])
         cond1 = update['Last Name'] == args['lastname']
         cond2 = update['First Name'] == args['firstname']
         print('The updated score is ..')
-        print(update.loc[(cond1)&(cond2),['Last Name', 'First Name',args['quiz#']]])
-        update.to_excel(file_path, index=None, header=True)
+        update.to_excel(args['filesave'], index=None, header=True)
         data=pd.read_excel(file_path)
-        print(data.dropna(subset=[args['quiz#']]))
-        # print(data)
+        print(data.dropna(subset=[args['column']]))
+        print(update.loc[(cond1)&(cond2),['Last Name', 'First Name',args['column']]])
     elif args['R#']:
         update = update_grades(args['filename'],
                                R_no=args['R#'],
-                               quiz=args['quiz#'],
+                               quiz=args['column'],
                                 grade = args['grade'])
-        update.to_excel(file_path, index=None, header=True)
+        update.to_excel(args['filesave'], index=None, header=True)
         data=pd.read_excel(file_path)
-        print(data.dropna(subset=[args['quiz#']]))
+        print(data.dropna(subset=[args['column']]))
         print('the updated score is ..')
-        print(data.loc[data['Student ID']=='R'+args['R#'], ['First Name','Last Name',args['quiz#']]])
+        print(data.loc[data['Student ID']=='R'+args['R#'], ['First Name','Last Name',args['column']]])
